@@ -52,7 +52,7 @@ export default function App() {
       (geolocationPosition) => {
         const { coords } = geolocationPosition;
         fetch(
-          `http://localhost:3000/api/data?lat=${coords.latitude}&lon=${coords.longitude}`
+          `${buildUrl()}api/data?lat=${coords.latitude}&lon=${coords.longitude}`
         )
           .then((res) => {
             return res.json();
@@ -70,7 +70,7 @@ export default function App() {
   const initialFetcher = () => {
     const searchQuery = search ? search : "Toronto";
     setLoading(true);
-    fetch(`http://localhost:3000/api/data?city=${searchQuery}`)
+    fetch(`${buildUrl()}api/data?city=${searchQuery}`)
       .then((res) => {
         return res.json();
       })
@@ -80,9 +80,7 @@ export default function App() {
       });
   };
   const fetcher = (suggestion: Suggestion) => {
-    fetch(
-      `http://localhost:3000/api/data?lat=${suggestion.lat}&lon=${suggestion.lon}`
-    )
+    fetch(`${buildUrl()}api/data?lat=${suggestion.lat}&lon=${suggestion.lon}`)
       .then((res) => {
         return res.json();
       })
@@ -96,7 +94,7 @@ export default function App() {
   };
   const updateSuggestions = () => {
     if (search.length > 0) {
-      fetch(`http://localhost:3000/api/data?city=${search}`)
+      fetch(`${buildUrl()}api/data?city=${search}`)
         .then((res) => {
           return res.json();
         })
@@ -238,4 +236,11 @@ export default function App() {
       </motion.div>
     </div>
   );
+}
+
+function buildUrl() {
+  const url = new URL(
+    window.location.protocol + "//" + window.location.hostname + ":3000"
+  );
+  return url.href;
 }
