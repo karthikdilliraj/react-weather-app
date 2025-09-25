@@ -2,7 +2,6 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import axios from "axios";
-import dateFormat from "dateformat";
 dotenv.config();
 
 const app = express();
@@ -110,6 +109,14 @@ async function getWeather({ lat, lon }: { lat: number; lon: number }) {
     }
 }
 
+let dateFormat: any;
+async function getDateFormat() {
+    if (dateFormat) return dateFormat;
+    const { default: format } = await import("dateformat");
+    dateFormat = format;
+    return dateFormat;
+}
+
 async function getWeatherForecast({ lat, lon }: { lat: number; lon: number }) {
     const response = await axios.get(
         `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`,
@@ -126,7 +133,7 @@ async function getWeatherForecast({ lat, lon }: { lat: number; lon: number }) {
         }
         daily[date].push(item);
     });
-
+    const dateFormat = await getDateFormat();
     // Extract average or noon reading
     const forecast = Object.keys(daily).slice(0, 5).map((date) => {
         const dayData = daily[date];
