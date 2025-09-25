@@ -112,7 +112,7 @@ async function getWeather({ lat, lon }: { lat: number; lon: number }) {
 const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 function getDayFromDate(date: string) {
     const dateObj = new Date(date);
-    const day = dateObj.getDay();
+    const day = dateObj.getUTCDay();
     return dayNames[day];
 }
 
