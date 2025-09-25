@@ -239,8 +239,6 @@ export default function App() {
 }
 
 function buildUrl() {
-  const url = new URL(
-    window.location.protocol + "//" + window.location.hostname + ":3000"
-  );
+  const url = new URL(window.location.protocol + "//" + window.location.host);
   return url.href;
 }
