@@ -109,12 +109,11 @@ async function getWeather({ lat, lon }: { lat: number; lon: number }) {
     }
 }
 
-let dateFormat: any;
-async function getDateFormat() {
-    if (dateFormat) return dateFormat;
-    const { default: format } = await import("dateformat");
-    dateFormat = format;
-    return dateFormat;
+const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+function getDayFromDate(date: string) {
+    const dateObj = new Date(date);
+    const day = dateObj.getDay();
+    return dayNames[day];
 }
 
 async function getWeatherForecast({ lat, lon }: { lat: number; lon: number }) {
@@ -133,7 +132,7 @@ async function getWeatherForecast({ lat, lon }: { lat: number; lon: number }) {
         }
         daily[date].push(item);
     });
-    const dateFormat = await getDateFormat();
+
     // Extract average or noon reading
     const forecast = Object.keys(daily).slice(0, 5).map((date) => {
         const dayData = daily[date];
@@ -142,7 +141,7 @@ async function getWeatherForecast({ lat, lon }: { lat: number; lon: number }) {
             temps.length;
         return {
             date,
-            day: dateFormat(date, "ddd"),
+            day: getDayFromDate(date),
             avgTemp: `${Math.round(parseFloat(avgTemp.toFixed(1)))}°C`,
             condition: dayData[0].weather[0].description,
             icon: `http://openweathermap.org/img/wn/${
