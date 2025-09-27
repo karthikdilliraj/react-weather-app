@@ -106,7 +106,6 @@ export default function App() {
     }
   };
   const handleSelectCity = (suggestion: Suggestion) => {
-    console.log(suggestion);
     fetcher(suggestion);
     setSuggestions([]);
   };
